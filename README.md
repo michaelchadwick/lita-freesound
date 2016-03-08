@@ -1,6 +1,6 @@
 # lita-freesound
 
-TODO: Add a description of the plugin.
+Lita handler for interfacing with Freesound.org's multitudes of free sounds.
 
 ## Installation
 
