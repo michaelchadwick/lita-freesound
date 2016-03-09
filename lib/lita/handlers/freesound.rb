@@ -1,41 +1,36 @@
+require 'net/http'
+require 'json'
+
 module Lita
   module Handlers
     class Freesound < Handler
-      URL = "http://freesound.org/apiv2/search/test/"
+      BASE_URL = "http://freesound.org/apiv2/search/text/"
       NO_RESULTS = 'Freesound has no results for that.'
 
       config :api_key, type: String, required: true
 
-      route(/freesound|fs/i, :get_sound, command: true, help: {
+      route(/freesound|fs/i, :get_sound, help: {
         "freesound SEARCH_TERM" => "Return the first Freesound search result for SEARCH_TERM"
       })
 
       def get_sound(response)
-        query = response.matches[0][0]
+        query = response.args.join
 
-        http_response = http.get(
-          "#{URL}?query=#{query}&token=#{Lita.config.handlers.freesound.api_key}",
-          limit: 1
+        fs_response = Net::HTTP.get(
+          URI("#{BASE_URL}?query=#{query}&token=#{Lita.config.handlers.freesound.api_key}&format=json")
         )
 
-        case http_response.status
-        when 200
-          data = MultiJson.load(http_response.body)
+        data = JSON.parse(fs_response)
 
-          result = data["responseData"]["results"]
+        result = data['results']
 
-          if result
-            response.reply result
-            )
-          else
-            response.reply("No search results for query: #{query}")
-          end
-        when 404
-          NO_RESULTS
+        if result
+          first_hit = result[0]
+          sound_id = first_hit['id']
+          username = first_hit['username']
+          response.reply "http://freesound.org/people/#{username}/sounds/#{sound_id}"
         else
-          Lita.logger.warn(
-            "Freesound did not like the query: #{query}"
-          )
+          response.reply("No search results for query: #{query}")
         end
       end
 
