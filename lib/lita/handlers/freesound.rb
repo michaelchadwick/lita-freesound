@@ -4,7 +4,8 @@ require 'json'
 module Lita
   module Handlers
     class Freesound < Handler
-      BASE_URL = "http://freesound.org/apiv2/search/text/"
+      BASE_SEARCH_URL = "http://freesound.org/apiv2/search/text"
+      BASE_SOUND_URL = "http://freesound.org/apiv2/sounds"
       NO_RESULTS = 'Freesound has no results for that.'
 
       config :api_key, type: String, required: true
@@ -15,12 +16,13 @@ module Lita
 
       def get_sound(response)
         query = response.args.join
+        api_token = Lita.config.handlers.freesound.api_key
 
-        fs_response = Net::HTTP.get(
-          URI("#{BASE_URL}?query=#{query}&token=#{Lita.config.handlers.freesound.api_key}&format=json")
+        fs_search_response = Net::HTTP.get(
+          URI("#{BASE_SEARCH_URL}/?query=#{query}&token=#{api_token}&format=json")
         )
 
-        data = JSON.parse(fs_response)
+        data = JSON.parse(fs_search_response)
 
         result = data['results']
 
@@ -28,7 +30,17 @@ module Lita
           first_hit = result[0]
           sound_id = first_hit['id']
           username = first_hit['username']
-          response.reply "http://freesound.org/people/#{username}/sounds/#{sound_id}"
+          sound_author_url = "http://freesound.org/people/#{username}/sounds/#{sound_id}"
+
+          fs_sound_response = Net::HTTP.get(
+            URI("#{BASE_SOUND_URL}/#{sound_id}/?token=#{api_token}&format=json")
+          )
+
+          data = JSON.parse(fs_sound_response)
+
+          preview_url = data['previews']['preview-hq-mp3']
+
+          response.reply "#{preview_url}\nfrom #{sound_author_url}"
         else
           response.reply("No search results for query: #{query}")
         end
