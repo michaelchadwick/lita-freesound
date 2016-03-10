@@ -10,7 +10,7 @@ module Lita
 
       config :api_key, type: String, required: true
 
-      route(/freesound|fs/i, :get_sound, help: {
+      route(/freesound(\s)|fs(\s)/i, :get_sound, help: {
         "freesound SEARCH_TERM" => "Return the first Freesound search result for SEARCH_TERM"
       })
 
@@ -29,8 +29,7 @@ module Lita
         if result
           first_hit = result[0]
           sound_id = first_hit['id']
-          username = first_hit['username']
-          sound_author_url = "http://freesound.org/people/#{username}/sounds/#{sound_id}"
+          sound_name = first_hit['name'].split('.')[0]
 
           fs_sound_response = Net::HTTP.get(
             URI("#{BASE_SOUND_URL}/#{sound_id}/?token=#{api_token}&format=json")
@@ -40,7 +39,7 @@ module Lita
 
           preview_url = data['previews']['preview-hq-mp3']
 
-          response.reply "#{preview_url}\nfrom #{sound_author_url}"
+          response.reply "#{sound_name} - #{preview_url}"
         else
           response.reply("No search results for query: #{query}")
         end
