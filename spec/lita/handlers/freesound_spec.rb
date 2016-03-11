@@ -6,13 +6,13 @@ describe Lita::Handlers::Freesound, lita_handler: true do
 
   describe "#get_sound" do
     it "responds with a link to the first query hit" do
-      send_message("freesound gear_clink")
-      expect(replies.last).to match(/http:\/\/freesound.org\/people\/nebyoolae\/sounds\/318067\//)
+      send_command("freesound gear clink")
+      expect(replies.last).to match(/https:\/\/www.freesound.org\/data\/previews\/318\/318067_584239-hq.mp3/)
     end
 
     it "reports no results if search doesn't match anything" do
       send_message("freesound -$3")
-      expect(replies.last).to match(/No search results for query:/)
+      expect(replies.last).to match(/No sounds match/)
     end
   end
 end
