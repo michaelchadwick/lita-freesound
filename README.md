@@ -1,6 +1,6 @@
 # lita-freesound
 
-Lita handler for interfacing with Freesound.org's multitudes of free sounds.
+`lita-freesound` is a [Lita](http://lita.io) handler that searches Freesound.org's multitudes of sounds and returns the top hit.
 
 ## Installation
 
@@ -12,10 +12,17 @@ gem "lita-freesound"
 
 ## Configuration
 
-TODO: Describe any configuration attributes the plugin exposes.
+### Required attributes
+
+* `api_key` (String) - The bot's Freesound API key. Get one [here](http://www.freesound.org/apiv2/apply).
 
 ## Usage
 
-TODO: Describe the plugin's features and how to use them.
-=======
-Lita handler that interfaces with Freesound.org
+```
+You: Lita, freesound cowbell
+Lita: Cowbell - http://www.freesound.org/data/previews/75/75338_708954-hq.mp3
+```
+
+## License
+
+[MIT](http://opensource.org/licenses/MIT)
