@@ -2,7 +2,8 @@ require "spec_helper"
 
 describe Lita::Handlers::Freesound, lita_handler: true do
   it { is_expected.to route_command("freesound rimshot").to(:get_sound) }
-  it { is_expected.to route_command("fs explosion").to(:get_sound) }
+  it { is_expected.to route_command("fs monkey").to(:get_sound) }
+  it { is_expected.to route_command("fs big old explosion").to(:get_sound) }
 
   describe "#get_sound" do
     it "responds with a link to the first query hit" do
@@ -11,7 +12,7 @@ describe Lita::Handlers::Freesound, lita_handler: true do
     end
 
     it "reports no results if search doesn't match anything" do
-      send_message("freesound -$3")
+      send_command("freesound -$3")
       expect(replies.last).to match(/No sounds match/)
     end
   end

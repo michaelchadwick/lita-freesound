@@ -10,7 +10,7 @@ module Lita
 
       config :api_key, type: String, required: true
 
-      route(/freesound(\s)|fs(\s)/i, :get_sound, help: {
+      route(/freesound(\s)|fs(\s)/i, :get_sound, command: true, help: {
         "freesound SEARCH_TERM" => "Return the first Freesound search result for SEARCH_TERM"
       })
 
@@ -27,7 +27,7 @@ module Lita
 
         if data['count']
           if data['count'] > 0
-            results = data['results']          
+            results = data['results']
 
             sound_id = results[0]['id']
             sound_name = results[0]['name'].split('.')[0]
@@ -44,10 +44,10 @@ module Lita
           else
             response.reply("No sounds match '#{query}'")
           end
+        else
+          response.reply("Freesound did not return any valid data.")
+          Lita.logger.warn("No valid data from Freesound.")
         end
-      else
-        response.reply("Freesound did not return any valid data.")
-        Lita.logger.warn("No valid data from Freesound.")
       end
 
       Lita.register_handler(self)
