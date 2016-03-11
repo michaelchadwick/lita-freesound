@@ -6,21 +6,21 @@ module Lita
     class Freesound < Handler
       BASE_SEARCH_URL = "https://freesound.org/apiv2/search/text"
       BASE_SOUND_URL = "https://freesound.org/apiv2/sounds"
-      NO_RESULTS = 'Freesound has no results for that.'
 
       config :api_key, type: String, required: true
 
-      route(/freesound(\s)|fs(\s)/i, :get_sound, command: true, help: {
+      route(/(freesound|fs)(\s)/i, :get_sound, command: true, help: {
         "freesound SEARCH_TERM" => "Return the first Freesound search result for SEARCH_TERM"
       })
 
       def get_sound(response)
-        query = response.args.join(" ")
+        query = response.args.join("+")
 
         api_token = Lita.config.handlers.freesound.api_key
 
+        query_string = "#{BASE_SEARCH_URL}/?query=#{query}&token=#{api_token}&format=json"
         fs_search_response = Net::HTTP.get(
-          URI("#{BASE_SEARCH_URL}/?query=#{query}&token=#{api_token}&format=json")
+          URI(query_string)
         )
 
         data = JSON.parse(fs_search_response)
@@ -42,11 +42,11 @@ module Lita
 
             response.reply "#{sound_name} - #{preview_url}"
           else
-            response.reply("No sounds match '#{query}'")
+            response.reply "No sounds match '#{query}'"
           end
         else
-          response.reply("Freesound did not return any valid data.")
-          Lita.logger.warn("No valid data from Freesound.")
+          response.reply "Freesound request failed."
+          Lita.logger.error("Freesound request failed: #{response.inspect}.")
         end
       end
 
