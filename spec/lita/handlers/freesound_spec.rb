@@ -15,5 +15,11 @@ describe Lita::Handlers::Freesound, lita_handler: true do
       send_command("freesound -$3")
       expect(replies.last).to match(/No sounds match/)
     end
+
+    it "logs an error and replies that the request completely failed" do
+      allow(replies).to receive(:data).and_return(nil)
+      send_command("freesound banshee")
+      expect(replies.last).to include("request failed")
+    end
   end
 end
