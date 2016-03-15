@@ -16,6 +16,10 @@ gem "lita-freesound"
 
 * `api_key` (String) - The bot's Freesound API key. Get one [here](http://www.freesound.org/apiv2/apply).
 
+### Testing
+
+To run rspec's tests, please add your Freesound API key to an environment variable called `FREESOUND_KEY`.
+
 ## Usage
 
 ```
