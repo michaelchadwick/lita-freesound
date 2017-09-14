@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = "lita-freesound"
-  spec.version       = "0.1.0"
+  spec.version       = "0.1.1"
   spec.authors       = ["Michael Chadwick"]
   spec.email         = ["michael.chadwick@gmail.com"]
   spec.description   = %q{A Lita handler for interfacing with Freesound.org.}
