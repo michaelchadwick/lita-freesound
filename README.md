@@ -1,6 +1,6 @@
 # lita-freesound
 
-Lita handler for interfacing with Freesound.org's multitudes of free sounds.
+[Lita](https://lita.io) handler for interfacing with [Freesound.org](http://freesound.org)'s multitudes of free sounds.
 
 ## Installation
 
