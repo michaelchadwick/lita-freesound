@@ -12,10 +12,12 @@ gem "lita-freesound"
 
 ## Configuration
 
-TODO: Describe any configuration attributes the plugin exposes.
+Add a line to your `lita_config.rb` with your Freesound API Key.
 
-## Usage
-
-TODO: Describe the plugin's features and how to use them.
-=======
-Lita handler that interfaces with Freesound.org
+``` ruby
+Lita.configure do |config|
+  ...
+  config.handlers.freesound.api_key = "FREESOUND_API_KEY_HERE"
+  ...
+end
+```
